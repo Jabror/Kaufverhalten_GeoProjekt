@@ -53,6 +53,13 @@ function tally(responses, qid, options) {
   return counts;
 }
 
+function matchesFilter(response, filterQid, filterOption) {
+  if (filterQid === null || filterOption === null) return true;
+  const ans = response.answers?.[filterQid];
+  if (!ans) return false;
+  return Array.isArray(ans) ? ans.includes(filterOption) : ans === filterOption;
+}
+
 function Bar({ label, value, max, color }) {
   const pct = max > 0 ? Math.round((value / max) * 100) : 0;
   return (
@@ -69,14 +76,16 @@ function Bar({ label, value, max, color }) {
 }
 
 export default function App() {
-  const [view, setView]           = useState("home");
-  const [step, setStep]           = useState(0);
-  const [answers, setAnswers]     = useState({});
-  const [responses, setResponses] = useState([]);
-  const [loading, setLoading]     = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [dbLoading, setDbLoading] = useState(false);
-  const [dbError, setDbError]     = useState("");
+  const [view, setView]               = useState("home");
+  const [step, setStep]               = useState(0);
+  const [answers, setAnswers]         = useState({});
+  const [responses, setResponses]     = useState([]);
+  const [loading, setLoading]         = useState(false);
+  const [submitted, setSubmitted]     = useState(false);
+  const [dbLoading, setDbLoading]     = useState(false);
+  const [dbError, setDbError]         = useState("");
+  const [filterQid, setFilterQid]     = useState(null);
+  const [filterOption, setFilterOption] = useState(null);
 
   useEffect(() => {
     if (view === "results") {
@@ -118,6 +127,7 @@ export default function App() {
   }
 
   function resetSurvey() { setStep(0); setAnswers({}); setSubmitted(false); setView("home"); }
+  function clearFilter() { setFilterQid(null); setFilterOption(null); }
 
   const bg   = { minHeight:"100vh", background:"#0b0b14", fontFamily:"'DM Sans', sans-serif", color:"#f0f0f8" };
   const card = { background:"#13131f", border:"1px solid #2a2a3e", borderRadius:20, padding:"32px 36px", maxWidth:680, margin:"0 auto" };
@@ -127,6 +137,7 @@ export default function App() {
     fontFamily:"inherit", fontSize:15, fontWeight:700, cursor:"pointer", transition:"all 0.2s",
   });
 
+  // ── HOME ──────────────────────────────────────────────────────────────────
   if (view === "home") return (
     <div style={{ ...bg, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
@@ -147,6 +158,7 @@ export default function App() {
     </div>
   );
 
+  // ── SUBMITTED ─────────────────────────────────────────────────────────────
   if (view === "survey" && submitted) return (
     <div style={{ ...bg, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
@@ -162,6 +174,7 @@ export default function App() {
     </div>
   );
 
+  // ── SURVEY ────────────────────────────────────────────────────────────────
   if (view === "survey") {
     const progress = Math.round((step / QUESTIONS.length) * 100);
     const answered = isAnswered(q.id);
@@ -209,22 +222,105 @@ export default function App() {
     );
   }
 
+  // ── RESULTS ───────────────────────────────────────────────────────────────
   if (view === "results") {
-    const total = responses.length;
+    const filtered = responses.filter(r => matchesFilter(r, filterQid, filterOption));
+    const total    = responses.length;
+    const shown    = filtered.length;
+    const isFiltered = filterQid !== null && filterOption !== null;
+    const filterQ  = isFiltered ? QUESTIONS.find(q => q.id === filterQid) : null;
+
     return (
       <div style={{ ...bg, padding:"24px 16px" }}>
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
         <div style={{ maxWidth:760, margin:"0 auto" }}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:28, flexWrap:"wrap", gap:12 }}>
+
+          {/* Header */}
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:20, flexWrap:"wrap", gap:12 }}>
             <div>
               <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:28, fontWeight:800, margin:0, background:"linear-gradient(135deg,#a78bfa,#34d399)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>Ergebnisse</h1>
-              <p style={{ color:"#666", fontSize:13, margin:"4px 0 0" }}>Gesamt: <strong style={{ color:"#a78bfa" }}>{total}</strong> Antworten</p>
+              <p style={{ color:"#666", fontSize:13, margin:"4px 0 0" }}>
+                {isFiltered
+                  ? <><strong style={{ color:"#f472b6" }}>{shown}</strong> von <strong style={{ color:"#a78bfa" }}>{total}</strong> Antworten (gefiltert)</>
+                  : <>Gesamt: <strong style={{ color:"#a78bfa" }}>{total}</strong> Antworten</>
+                }
+              </p>
             </div>
-            <div style={{ display:"flex", gap:10 }}>
+            <div style={{ display:"flex", gap:10, flexWrap:"wrap" }}>
               <button style={btn(true,"#a78bfa")} onClick={() => setView("survey")}>Umfrage ausfüllen</button>
               <button style={btn(false,"#666")} onClick={resetSurvey}>Home</button>
             </div>
           </div>
+
+          {/* ── FILTER BOX ── */}
+          <div style={{ background:"#13131f", border:`1px solid ${isFiltered?"#f472b6":"#2a2a3e"}`, borderRadius:16, padding:"20px 24px", marginBottom:24 }}>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:14, flexWrap:"wrap", gap:8 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                <span style={{ fontSize:16 }}>🔍</span>
+                <span style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, color:"#e0e0f0" }}>Filter</span>
+                {isFiltered && (
+                  <span style={{ background:"#f472b622", color:"#f472b6", padding:"2px 10px", borderRadius:20, fontSize:11, fontWeight:700 }}>
+                    Aktiv: {filterQ?.text.slice(0,30)}… → „{filterOption}"
+                  </span>
+                )}
+              </div>
+              {isFiltered && (
+                <button onClick={clearFilter} style={{ background:"none", border:"1px solid #f472b6", color:"#f472b6", borderRadius:8, padding:"4px 12px", fontSize:12, cursor:"pointer", fontFamily:"inherit" }}>
+                  ✕ Filter entfernen
+                </button>
+              )}
+            </div>
+
+            <div style={{ display:"flex", gap:12, flexWrap:"wrap", alignItems:"flex-end" }}>
+              {/* Frage auswählen */}
+              <div style={{ flex:1, minWidth:200 }}>
+                <label style={{ fontSize:11, color:"#888", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>Frage</label>
+                <select
+                  value={filterQid ?? ""}
+                  onChange={e => { setFilterQid(e.target.value === "" ? null : Number(e.target.value)); setFilterOption(null); }}
+                  style={{ width:"100%", background:"#0b0b14", border:"1px solid #2a2a3e", borderRadius:10, padding:"10px 14px", color:"#f0f0f8", fontFamily:"inherit", fontSize:13, cursor:"pointer" }}
+                >
+                  <option value="">– Frage wählen –</option>
+                  {QUESTIONS.map(q => (
+                    <option key={q.id} value={q.id}>{q.id === 0 ? "Geschlecht" : `Frage ${q.id}`}: {q.text.slice(0,45)}{q.text.length>45?"…":""}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Antwort auswählen */}
+              <div style={{ flex:1, minWidth:160 }}>
+                <label style={{ fontSize:11, color:"#888", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>Antwort</label>
+                <select
+                  value={filterOption ?? ""}
+                  onChange={e => setFilterOption(e.target.value === "" ? null : e.target.value)}
+                  disabled={filterQid === null}
+                  style={{ width:"100%", background:"#0b0b14", border:"1px solid #2a2a3e", borderRadius:10, padding:"10px 14px", color: filterQid===null?"#555":"#f0f0f8", fontFamily:"inherit", fontSize:13, cursor: filterQid===null?"not-allowed":"pointer" }}
+                >
+                  <option value="">– Antwort wählen –</option>
+                  {filterQid !== null && QUESTIONS.find(q => q.id === filterQid)?.options.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Erklärungstext */}
+            {!isFiltered && (
+              <p style={{ color:"#555", fontSize:12, margin:"12px 0 0" }}>
+                Wähle eine Frage und eine Antwort, um nur die Fragebögen dieser Gruppe anzuzeigen. Z.B. nur 15-Jährige, nur Mädchen, etc.
+              </p>
+            )}
+            {isFiltered && shown === 0 && (
+              <p style={{ color:"#f87171", fontSize:12, margin:"12px 0 0" }}>⚠️ Keine Antworten entsprechen diesem Filter.</p>
+            )}
+            {isFiltered && shown > 0 && (
+              <p style={{ color:"#34d399", fontSize:12, margin:"12px 0 0" }}>
+                ✓ {shown} Teilnehmer haben bei „{filterQ?.text}" mit „{filterOption}" geantwortet.
+              </p>
+            )}
+          </div>
+
+          {/* Errors / loading */}
           {dbLoading && <p style={{ color:"#666", textAlign:"center", padding:40 }}>Lade Daten aus Firebase…</p>}
           {dbError   && <p style={{ color:"#f87171", textAlign:"center" }}>{dbError}</p>}
           {!dbLoading && !dbError && total === 0 && (
@@ -233,16 +329,25 @@ export default function App() {
               <p style={{ color:"#666" }}>Noch keine Antworten vorhanden.</p>
             </div>
           )}
-          {!dbLoading && total > 0 && QUESTIONS.map((q, qi) => {
-            const counts = tally(responses, q.id, q.options);
+
+          {/* Charts */}
+          {!dbLoading && shown > 0 && QUESTIONS.map((q, qi) => {
+            // Skip the filter question itself to avoid confusion
+            const counts = tally(filtered, q.id, q.options);
             const color  = PALETTE[qi % PALETTE.length];
+            const isFilterQ = isFiltered && q.id === filterQid;
             return (
-              <div key={q.id} style={{ ...card, marginBottom:16 }}>
+              <div key={q.id} style={{ ...card, marginBottom:16, border:`1px solid ${isFilterQ?"#f472b644":"#2a2a3e"}` }}>
                 <div style={{ display:"flex", alignItems:"flex-start", gap:12, marginBottom:16 }}>
-                  <span style={{ background:color+"22", color, padding:"2px 10px", borderRadius:20, fontSize:12, fontWeight:700, flexShrink:0 }}>#{q.id}</span>
-                  <p style={{ margin:0, fontSize:14, fontWeight:600, color:"#e0e0f0", lineHeight:1.5 }}>{q.text}</p>
+                  <span style={{ background:color+"22", color, padding:"2px 10px", borderRadius:20, fontSize:12, fontWeight:700, flexShrink:0 }}>
+                    {q.id === 0 ? "G" : `#${q.id}`}
+                  </span>
+                  <p style={{ margin:0, fontSize:14, fontWeight:600, color:"#e0e0f0", lineHeight:1.5, flex:1 }}>{q.text}</p>
+                  {isFilterQ && (
+                    <span style={{ background:"#f472b622", color:"#f472b6", padding:"2px 8px", borderRadius:10, fontSize:10, fontWeight:700, flexShrink:0 }}>FILTER</span>
+                  )}
                 </div>
-                {q.options.map(opt => <Bar key={opt} label={opt} value={counts[opt]} max={total} color={color} />)}
+                {q.options.map(opt => <Bar key={opt} label={opt} value={counts[opt]} max={shown} color={color} />)}
               </div>
             );
           })}
