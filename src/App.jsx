@@ -60,24 +60,72 @@ function matchesFilter(response, filterQid, filterOption) {
   return Array.isArray(ans) ? ans.includes(filterOption) : ans === filterOption;
 }
 
-function exportCSV(responses) {
-  const headers = ["Zeitstempel", ...QUESTIONS.map(q => q.text)];
-  const rows = responses.map(r => {
+async function exportXLSX(responses) {
+  // Dynamically load SheetJS
+  await new Promise((resolve, reject) => {
+    if (window.XLSX) { resolve(); return; }
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+    s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+  const XLS = window.XLSX;
+
+  const wb = XLS.utils.book_new();
+
+  // ── Sheet 1: Rohdaten ────────────────────────────────────────────────────
+  const headers = ["#", "Zeitstempel", ...QUESTIONS.map(q => q.text)];
+  const rows = responses.map((r, i) => {
     const ts = r.ts?.toDate ? r.ts.toDate().toLocaleString("de-DE") : "–";
     const cols = QUESTIONS.map(q => {
       const ans = r.answers?.[q.id];
-      if (!ans) return "";
-      return Array.isArray(ans) ? ans.join(" | ") : ans;
+      if (!ans) return "–";
+      return Array.isArray(ans) ? ans.join(", ") : ans;
     });
-    return [ts, ...cols];
+    return [i + 1, ts, ...cols];
   });
-  const escape = v => `"${String(v).replace(/"/g, '""')}"`;
-  const csv = [headers, ...rows].map(r => r.map(escape).join(",")).join("\n");
-  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = "umfrage_ergebnisse.csv"; a.click();
-  URL.revokeObjectURL(url);
+
+  const wsData = [headers, ...rows];
+  const ws = XLS.utils.aoa_to_sheet(wsData);
+
+  // Column widths
+  ws["!cols"] = [
+    { wch: 5 },   // #
+    { wch: 18 },  // Zeitstempel
+    ...QUESTIONS.map(() => ({ wch: 28 }))
+  ];
+
+  // Freeze header row
+  ws["!freeze"] = { xSplit: 0, ySplit: 1 };
+
+  XLS.utils.book_append_sheet(wb, ws, "Rohdaten");
+
+  // ── Sheet 2: Zusammenfassung ─────────────────────────────────────────────
+  const summaryRows = [["Frage", "Antwort", "Anzahl", "Prozent"]];
+  const total = responses.length;
+  QUESTIONS.forEach(q => {
+    const counts = {};
+    q.options.forEach(o => counts[o] = 0);
+    responses.forEach(r => {
+      const ans = r.answers?.[q.id];
+      if (!ans) return;
+      (Array.isArray(ans) ? ans : [ans]).forEach(a => { if (counts[a] !== undefined) counts[a]++; });
+    });
+    summaryRows.push([q.text, "", "", ""]);
+    q.options.forEach(opt => {
+      const n = counts[opt];
+      const pct = total > 0 ? Math.round((n / total) * 100) + "%" : "0%";
+      summaryRows.push(["", opt, n, pct]);
+    });
+    summaryRows.push(["", "", "", ""]);
+  });
+
+  const ws2 = XLS.utils.aoa_to_sheet(summaryRows);
+  ws2["!cols"] = [{ wch: 55 }, { wch: 35 }, { wch: 10 }, { wch: 10 }];
+  XLS.utils.book_append_sheet(wb, ws2, "Zusammenfassung");
+
+  // Download
+  XLS.writeFile(wb, "umfrage_ergebnisse.xlsx");
 }
 
 function exportJSON(responses) {
@@ -86,7 +134,7 @@ function exportJSON(responses) {
     const row = { Zeitstempel: ts };
     QUESTIONS.forEach(q => {
       const ans = r.answers?.[q.id];
-      row[q.text] = Array.isArray(ans) ? ans.join(" | ") : (ans || "");
+      row[q.text] = Array.isArray(ans) ? ans.join(", ") : (ans || "–");
     });
     return row;
   });
@@ -286,7 +334,7 @@ export default function App() {
             <div style={{ display:"flex", gap:10, flexWrap:"wrap" }}>
               <button style={btn(true,"#a78bfa")} onClick={() => setView("survey")}>Umfrage ausfüllen</button>
               {total > 0 && <>
-                <button style={btn(true,"#f59e0b")} onClick={() => exportCSV(responses)}>⬇ CSV</button>
+                <button style={btn(true,"#f59e0b")} onClick={() => exportXLSX(responses)}>⬇ Excel</button>
                 <button style={btn(true,"#34d399")} onClick={() => exportJSON(responses)}>⬇ JSON</button>
               </>}
               <button style={btn(false,"#666")} onClick={resetSurvey}>Home</button>
