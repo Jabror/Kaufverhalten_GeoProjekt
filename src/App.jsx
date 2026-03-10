@@ -21,7 +21,7 @@ const QUESTIONS = [
   { id: 2,  text: "Auf welchen Plattformen folgst du Influencern?", multi: true,  options: ["Instagram","TikTok","YouTube","Snapchat","Ich folge keinen Influencern"] },
   { id: 3,  text: "Wie oft siehst du Inhalte von Influencern?", multi: false, options: ["Mehrmals täglich","Einmal täglich","Mehrmals pro Woche","Selten","Nie"] },
   { id: 4,  text: "Wie sehr interessieren dich Produktempfehlungen von Influencern?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
-  { id: 5,  text: "Hast du schon einmal ein Produkt gekauft, weil ein Influencer es gezeigt hat?", multi: false, options: ["Über 5 Mal","2 - 5 Mal","Einmal","Noch nie"] },
+  { id: 5,  text: "Hast du schon einmal ein Produkt gekauft, weil ein Influencer es gezeigt hat?", multi: false, options: ["Ja, oft","Ja, ein paar Mal","Einmal","Noch nie"] },
   { id: 6,  text: "Welche Produkte kaufst du am ehesten wegen Influencern?", multi: true,  options: ["Kleidung","Kosmetik / Pflege","Technik","Essen / Getränke","Sonstiges","Keine"] },
   { id: 7,  text: "Wie sehr vertraust du Empfehlungen von Influencern?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
   { id: 8,  text: "Glaubst du, dass Influencer ehrlich über Produkte sprechen?", multi: false, options: ["Ja, meistens","Manchmal","Selten","Nie"] },
@@ -58,6 +58,43 @@ function matchesFilter(response, filterQid, filterOption) {
   const ans = response.answers?.[filterQid];
   if (!ans) return false;
   return Array.isArray(ans) ? ans.includes(filterOption) : ans === filterOption;
+}
+
+function exportCSV(responses) {
+  const headers = ["Zeitstempel", ...QUESTIONS.map(q => q.text)];
+  const rows = responses.map(r => {
+    const ts = r.ts?.toDate ? r.ts.toDate().toLocaleString("de-DE") : "–";
+    const cols = QUESTIONS.map(q => {
+      const ans = r.answers?.[q.id];
+      if (!ans) return "";
+      return Array.isArray(ans) ? ans.join(" | ") : ans;
+    });
+    return [ts, ...cols];
+  });
+  const escape = v => `"${String(v).replace(/"/g, '""')}"`;
+  const csv = [headers, ...rows].map(r => r.map(escape).join(",")).join("\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "umfrage_ergebnisse.csv"; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportJSON(responses) {
+  const data = responses.map(r => {
+    const ts = r.ts?.toDate ? r.ts.toDate().toLocaleString("de-DE") : "–";
+    const row = { Zeitstempel: ts };
+    QUESTIONS.forEach(q => {
+      const ans = r.answers?.[q.id];
+      row[q.text] = Array.isArray(ans) ? ans.join(" | ") : (ans || "");
+    });
+    return row;
+  });
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "umfrage_ergebnisse.json"; a.click();
+  URL.revokeObjectURL(url);
 }
 
 function Bar({ label, value, max, color }) {
@@ -248,6 +285,10 @@ export default function App() {
             </div>
             <div style={{ display:"flex", gap:10, flexWrap:"wrap" }}>
               <button style={btn(true,"#a78bfa")} onClick={() => setView("survey")}>Umfrage ausfüllen</button>
+              {total > 0 && <>
+                <button style={btn(true,"#f59e0b")} onClick={() => exportCSV(responses)}>⬇ CSV</button>
+                <button style={btn(true,"#34d399")} onClick={() => exportJSON(responses)}>⬇ JSON</button>
+              </>}
               <button style={btn(false,"#666")} onClick={resetSurvey}>Home</button>
             </div>
           </div>
