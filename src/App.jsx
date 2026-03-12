@@ -21,7 +21,7 @@ const QUESTIONS = [
   { id: 2,  text: "Auf welchen Plattformen folgst du Influencern?", multi: true,  options: ["Instagram","TikTok","YouTube","Snapchat","Ich folge keinen Influencern"] },
   { id: 3,  text: "Wie oft siehst du Inhalte von Influencern?", multi: false, options: ["Mehrmals täglich","Einmal täglich","Mehrmals pro Woche","Selten","Nie"] },
   { id: 4,  text: "Wie sehr interessieren dich Produktempfehlungen von Influencern?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
-  { id: 5,  text: "Hast du schon einmal ein Produkt gekauft, weil ein Influencer es gezeigt hat?", multi: false, options: ["Ja, oft","Ja, ein bis drei Mal","Einmal","Noch nie"] },
+  { id: 5,  text: "Hast du schon einmal ein Produkt gekauft, weil ein Influencer es gezeigt hat?", multi: false, options: ["Ja, oft","Ja, ein paar Mal","Einmal","Noch nie"] },
   { id: 6,  text: "Welche Produkte kaufst du am ehesten wegen Influencern?", multi: true,  options: ["Kleidung","Kosmetik / Pflege","Technik","Essen / Getränke", "Self-improvement","Sonstiges","Keine"] },
   { id: 7,  text: "Wie sehr vertraust du Empfehlungen von Influencern?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
   { id: 8,  text: "Warum vertraust du der Empfehlung eines Influencers? (Mehrfachauswahl möglich)", multi: true, options: ["Ich finde die Person sympathisch/authentisch","Ich sehe das Produkt im täglichen Einsatz (Storys/Vlogs)","Die Ergebnisse/Vorher-Nachher-Effekte überzeugen mich","Weil viele andere aus meiner Freundesgruppe es auch kaufen","Ich vertraue Influencer-Empfehlungen generell nicht"] },
@@ -163,6 +163,7 @@ function Bar({ label, value, max, color }) {
 }
 
 const STORAGE_KEY = "umfrage_geoprojekt_done";
+const CORRECT_PIN = "1111";
 
 export default function App() {
   const [view, setView]               = useState("home");
@@ -176,6 +177,9 @@ export default function App() {
   const [filterQid, setFilterQid]     = useState(null);
   const [filterOption, setFilterOption] = useState(null);
   const [alreadyDone, setAlreadyDone] = useState(() => !!localStorage.getItem(STORAGE_KEY));
+  const [pinUnlocked, setPinUnlocked] = useState(false);
+  const [pinInput, setPinInput]       = useState("");
+  const [pinError, setPinError]       = useState(false);
 
   useEffect(() => {
     if (view === "results") {
@@ -221,6 +225,25 @@ export default function App() {
   function resetSurvey() { setStep(0); setAnswers({}); setSubmitted(false); setView("home"); }
   function clearFilter() { setFilterQid(null); setFilterOption(null); }
 
+  function handlePinSubmit() {
+    if (pinInput === CORRECT_PIN) {
+      setPinUnlocked(true);
+      setPinError(false);
+      setView("results");
+    } else {
+      setPinError(true);
+      setPinInput("");
+    }
+  }
+
+  function goToResults() {
+    if (pinUnlocked) {
+      setView("results");
+    } else {
+      setView("pin");
+    }
+  }
+
   const bg   = { minHeight:"100vh", background:"#0b0b14", fontFamily:"'DM Sans', sans-serif", color:"#f0f0f8" };
   const card = { background:"#13131f", border:"1px solid #2a2a3e", borderRadius:20, padding:"32px 36px", maxWidth:680, margin:"0 auto" };
   const btn  = (active, color="#a78bfa") => ({
@@ -252,7 +275,7 @@ export default function App() {
           <button style={{ ...btn(true), marginBottom:12 }} onClick={() => setView("survey")}>Umfrage starten →</button>
         )}
         <br/>
-        <button style={{ ...btn(false,"#34d399"), marginTop: alreadyDone ? 0 : 8 }} onClick={() => setView("results")}>Ergebnisse ansehen</button>
+        <button style={{ ...btn(false,"#34d399"), marginTop: alreadyDone ? 0 : 8 }} onClick={goToResults}>Ergebnisse ansehen</button>
       </div>
     </div>
   );
@@ -266,7 +289,7 @@ export default function App() {
         <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:28, fontWeight:800, margin:"0 0 10px", color:"#a78bfa" }}>Danke für deine Teilnahme!</h2>
         <p style={{ color:"#9090b0", fontSize:14, marginBottom:28 }}>Deine Antworten wurden in Firebase gespeichert.</p>
         <div style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
-          <button style={btn(true)} onClick={() => setView("results")}>Ergebnisse ansehen</button>
+          <button style={btn(true)} onClick={goToResults}>Ergebnisse ansehen</button>
         </div>
       </div>
     </div>
@@ -319,6 +342,60 @@ export default function App() {
       </div>
     );
   }
+
+  // ── PIN ───────────────────────────────────────────────────────────────────
+  if (view === "pin") return (
+    <div style={{ ...bg, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
+      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+      <div style={{ ...card, textAlign:"center", maxWidth:400 }}>
+        <div style={{ fontSize:48, marginBottom:12 }}>🔒</div>
+        <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:24, fontWeight:800, margin:"0 0 8px", color:"#f0f0f8" }}>Geschützter Bereich</h2>
+        <p style={{ color:"#9090b0", fontSize:14, marginBottom:28 }}>Bitte gib den PIN ein, um die Ergebnisse zu sehen.</p>
+
+        {/* PIN dots display */}
+        <div style={{ display:"flex", justifyContent:"center", gap:14, marginBottom:24 }}>
+          {[0,1,2,3].map(i => (
+            <div key={i} style={{ width:18, height:18, borderRadius:"50%", background: pinInput.length > i ? "#a78bfa" : "transparent", border:"2px solid " + (pinInput.length > i ? "#a78bfa" : "#2a2a3e"), transition:"all 0.15s" }}/>
+          ))}
+        </div>
+
+        {/* Number pad */}
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:12, maxWidth:240, margin:"0 auto 16px" }}>
+          {[1,2,3,4,5,6,7,8,9].map(n => (
+            <button key={n} onClick={() => { if (pinInput.length < 4) setPinInput(p => p + n); setPinError(false); }}
+              style={{ background:"#1a1a2e", border:"1px solid #2a2a3e", borderRadius:12, padding:"16px", fontSize:20, fontWeight:700, color:"#f0f0f8", cursor:"pointer", fontFamily:"inherit", transition:"all 0.1s" }}>
+              {n}
+            </button>
+          ))}
+          {/* Bottom row: empty, 0, delete */}
+          <div/>
+          <button onClick={() => { if (pinInput.length < 4) setPinInput(p => p + "0"); setPinError(false); }}
+            style={{ background:"#1a1a2e", border:"1px solid #2a2a3e", borderRadius:12, padding:"16px", fontSize:20, fontWeight:700, color:"#f0f0f8", cursor:"pointer", fontFamily:"inherit" }}>
+            0
+          </button>
+          <button onClick={() => setPinInput(p => p.slice(0,-1))}
+            style={{ background:"#1a1a2e", border:"1px solid #2a2a3e", borderRadius:12, padding:"16px", fontSize:18, color:"#9090b0", cursor:"pointer", fontFamily:"inherit" }}>
+            ⌫
+          </button>
+        </div>
+
+        {/* Error message */}
+        {pinError && (
+          <p style={{ color:"#f87171", fontSize:13, marginBottom:12 }}>❌ Falscher PIN. Bitte versuche es erneut.</p>
+        )}
+
+        {/* Confirm button – auto-submits when 4 digits entered */}
+        <button
+          style={{ ...btn(pinInput.length === 4, "#a78bfa"), width:"100%", marginBottom:12 }}
+          disabled={pinInput.length !== 4}
+          onClick={handlePinSubmit}>
+          Bestätigen →
+        </button>
+        <br/>
+        <button onClick={() => setView("home")} style={{ background:"none", border:"none", color:"#555", cursor:"pointer", fontSize:13, fontFamily:"inherit" }}>← Zurück</button>
+      </div>
+    </div>
+  );
 
   // ── RESULTS ───────────────────────────────────────────────────────────────
   if (view === "results") {
