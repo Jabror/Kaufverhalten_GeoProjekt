@@ -28,7 +28,7 @@ const QUESTIONS = [
   { id: 9,  text: "Glaubst du, dass Influencer ehrlich über Produkte sprechen?", multi: false, options: ["Ja, meistens","Manchmal","Selten","Nie"] },
   { id: 10, text: "Wie wichtig ist dir, dass Influencer Werbung kennzeichnen?", multi: false, options: ["Sehr wichtig","Wichtig","Neutral","Wenig wichtig","Gar nicht wichtig"] },
   { id: 11, text: "Wie stark beeinflussen Influencer deine Kaufentscheidungen?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
-  { id: 12, text: "Hast du schon einmal etwas gekauft und es später bereut, weil ein Influencer es empfohlen hat?", multi: false, options: ["Ja, oft","Ja, einmal oder ein paar Mal","Nein"] },
+  { id: 12, text: "Hast du schon einmal etwas gekauft und es später bereut, weil ein Influencer es empfohlen hat?", multi: false, options: ["Ja, oft","Ja, einmal oder ein paar Mal","Nein", "Nein, ich habe noch nie wegen eines Influencers etwas gekauft"] },
   { id: 13, text: "Wie oft klickst du auf Links oder Rabattcodes von Influencern?", multi: false, options: ["Sehr oft","Manchmal","Selten","Nie"] },
   { id: 14, text: "Wie wichtig ist dir die Meinung von Influencern im Vergleich zu Freunden?", multi: false, options: ["Influencer sind wichtiger","Beide gleich wichtig","Freunde sind wichtiger","Keine von beiden"] },
   { id: 15, text: "Findest du Influencer eher inspirierend oder störend?", multi: false, options: ["Sehr inspirierend","Eher inspirierend","Neutral","Eher störend","Sehr störend"] },
