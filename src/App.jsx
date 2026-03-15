@@ -44,6 +44,29 @@ const QUESTIONS = [
 const PALETTE = ["#a78bfa","#f472b6","#34d399","#60a5fa","#fb923c","#e879f9","#4ade80","#f59e0b","#38bdf8","#f87171",
                  "#c084fc","#86efac","#fdba74","#67e8f9","#fca5a5","#a5f3fc","#d4d4d8","#fde68a","#bbf7d0","#e0f2fe"];
 
+// Wendet das Mapping auf eine einzelne Antwort an
+function applyMapping(qid, answer) {
+  for (const m of ANSWER_MAPPINGS) {
+    if (m.qid === qid && m.from === answer) return m.to;
+  }
+  return answer;
+}
+
+// Normalisiert alle Antworten einer Response durch das Mapping
+function normalizeResponse(r) {
+  const normalized = { ...r, answers: { ...r.answers } };
+  QUESTIONS.forEach(q => {
+    const ans = normalized.answers?.[q.id];
+    if (!ans) return;
+    if (Array.isArray(ans)) {
+      normalized.answers[q.id] = ans.map(a => applyMapping(q.id, a));
+    } else {
+      normalized.answers[q.id] = applyMapping(q.id, ans);
+    }
+  });
+  return normalized;
+}
+
 function tally(responses, qid, options) {
   const counts = {};
   options.forEach(o => counts[o] = 0);
@@ -182,7 +205,7 @@ export default function App() {
       setDbLoading(true);
       setDbError("");
       getDocs(collection(db, "responses"))
-        .then(snap => { setResponses(snap.docs.map(d => d.data())); setDbLoading(false); })
+        .then(snap => { setResponses(snap.docs.map(d => normalizeResponse(d.data()))); setDbLoading(false); })
         .catch(e  => { setDbError("Fehler beim Laden: " + e.message); setDbLoading(false); });
     }
   }, [view]);
