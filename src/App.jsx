@@ -41,6 +41,20 @@ const QUESTIONS = [
   { id: 22, text: "Findest du Influencer-Werbung insgesamt positiv oder negativ?", multi: false, options: ["Sehr positiv","Eher positiv","Neutral","Eher negativ","Sehr negativ"] },
 ];
 
+const ANSWER_MAPPINGS = [
+  { qid: 5,  from: "Ja, oft",                  to: "Ja, über fünf Mal" },
+  { qid: 5,  from: "Ja, ein paar Mal",          to: "Ja, ein - fünf Mal" },
+  { qid: 11, from: "Sehr stark",                to: "Sehr stark(Ich kaufe nur das was ein Influencer mir empfiehlt)" },
+  { qid: 11, from: "Mittel",                    to: "Mittel(Ich nehme Ratschläge vom Influencer an, jedoch mache ich immer noch meine eigene Kaufentscheidung)" },
+  { qid: 12, from: "Ja, einmal oder ein paar Mal", to: "Ja, ein - fünf Mal" },
+  { qid: 12, from: "Ja, oft",                   to: "Ja, über fünf Mal" },
+  { qid: 18, from: "Nervig",                    to: "Störend" },
+  { qid: 18, from: "Eher nervig",               to: "Eher störend" },
+  { qid: 18, from: "Nicht nervig",              to: "Nicht störend" },
+  { qid: 21, from: "Sehr stark",                to: "Sehr stark(Sie kaufen nur das was ein Influencer ihnen empfiehlt)" },
+  { qid: 21, from: "Mittel",                    to: "Mittel(Sie nehmem Ratschläge vom Influencer an, jedoch machen sie immer noch ihre eigene Kaufentscheidung)" },
+];
+
 const PALETTE = ["#a78bfa","#f472b6","#34d399","#60a5fa","#fb923c","#e879f9","#4ade80","#f59e0b","#38bdf8","#f87171",
                  "#c084fc","#86efac","#fdba74","#67e8f9","#fca5a5","#a5f3fc","#d4d4d8","#fde68a","#bbf7d0","#e0f2fe"];
 
