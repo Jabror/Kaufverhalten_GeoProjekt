@@ -16,7 +16,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const QUESTIONS = [
-  { id: 0,  text: "Nigger", multi: false, options: ["Mann", "Weiber"] },
+  { id: 0,  text: "Was ist dein Geschlecht?", multi: false, options: ["Mann", "Frau"] },
   { id: 1,  text: "Wie alt bist du?", multi: false, options: ["13","14","15","16", "17", "18", "19", "Über 19"] },
   { id: 2,  text: "Auf welchen Plattformen folgst du Influencern?", multi: true,  options: ["Instagram","TikTok","YouTube","Snapchat","Ich folge keinen Influencern"] },
   { id: 3,  text: "Wie oft siehst du Inhalte von Influencern?", multi: false, options: ["Mehrmals täglich","Einmal täglich","Mehrmals pro Woche","Selten","Nie"] },
