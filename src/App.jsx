@@ -16,12 +16,12 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const QUESTIONS = [
-  { id: 0,  text: "Geschlecht", multi: false, options: ["Mann", "Frau"] },
+  { id: 0,  text: "Was ist dein Geschlecht", multi: false, options: ["Mann", "Frau"] },
   { id: 1,  text: "Wie alt bist du?", multi: false, options: ["13","14","15","16", "17", "18", "19", "Über 19"] },
   { id: 2,  text: "Auf welchen Plattformen folgst du Influencern?", multi: true,  options: ["Instagram","TikTok","YouTube","Snapchat","Ich folge keinen Influencern"] },
-  { id: 3,  text: "Wie oft siehst du Inhalte von Influencern?", multi: false, options: ["Mehrmals täglich","Einmal täglich","Mehrmals pro Woche","Selten","Nie"] },
+  { id: 3,  text: "Wie häufig konsumierst du Inhalte von Influencern?", multi: false, options: ["Mehrmals täglich","Einmal täglich","Mehrmals pro Woche","Selten","Nie"] },
   { id: 4,  text: "Wie sehr interessieren dich Produktempfehlungen von Influencern?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
-  { id: 5,  text: "Hast du schon einmal ein Produkt gekauft, weil ein Influencer es gezeigt hat?", multi: false, options: ["Ja, oft","Ja, ein paar Mal","Einmal","Noch nie"] },
+  { id: 5,  text: "Hast du schon einmal ein Produkt erworben, weil ein Influencer es gezeigt hat?", multi: false, options: ["Ja, oft","Ja, ein paar Mal","Einmal","Noch nie"] },
   { id: 6,  text: "Welche Produkte kaufst du am ehesten wegen Influencern?", multi: true,  options: ["Kleidung","Kosmetik / Pflege","Technik","Essen / Getränke", "Self-improvement","Sonstiges","Keine"] },
   { id: 7,  text: "Wie sehr vertraust du Empfehlungen von Influencern?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
   { id: 8,  text: "Warum vertraust du der Empfehlung eines Influencers? (Mehrfachauswahl möglich)", multi: true, options: ["Ich finde die Person sympathisch/authentisch","Ich sehe das Produkt im täglichen Einsatz (Storys/Vlogs)","Die Ergebnisse/Vorher-Nachher-Effekte überzeugen mich","Weil viele andere aus meiner Freundesgruppe es auch kaufen","Ich vertraue Influencer-Empfehlungen generell nicht"] },
@@ -34,7 +34,7 @@ const QUESTIONS = [
   { id: 15, text: "Findest du Influencer eher inspirierend oder störend?", multi: false, options: ["Sehr inspirierend","Eher inspirierend","Neutral","Eher störend","Sehr störend"] },
   { id: 16, text: "Hast du schon einmal einen Influencer wegen einer Produktempfehlung neu entdeckt?", multi: false, options: ["Ja","Nein"] },
   { id: 17, text: "Wie glaubwürdig findest du Influencer im Vergleich zu normaler Werbung?", multi: false, options: ["Viel glaubwürdiger","Etwas glaubwürdiger","Gleich glaubwürdig","Weniger glaubwürdig","Viel weniger glaubwürdig"] },
-  { id: 18, text: "Findest du es nervig, wenn influencer für Produkte Werbung machen?", multi: false, options: ["Nervig","Eher nervig","Neutral","Nicht nervig"] },
+  { id: 18, text: "Findest du es störend, wenn influencer für Produkte Werbung machen?", multi: false, options: ["Nervig","Eher nervig","Neutral","Nicht nervig"] },
   { id: 19, text: "Würdest du ein Produkt eher kaufen, wenn dein Lieblings-Influencer es nutzt?", multi: false, options: ["Ja, sicher","Wahrscheinlich","Vielleicht","Eher nicht","Nein"] },
   { id: 20, text: "Nutzt du Funktionen wie „Buy Now, Pay Later“ (z. B. Klarna), um Produkte von Influencer-Brands oder Kooperationen zu bezahlen?", multi: false, options: ["Regelmässig","Ab und zu","Nur bei teuren Anschaffungen","Nein, ich bezahle immer direkt"] },
   { id: 21, text: "Denkst du, Influencer beeinflussen das Kaufverhalten von Jugendlichen stark?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
@@ -54,7 +54,18 @@ const QUESTIONS = [
 // Mehrere Einträge sind möglich. Nicht genutzte Einträge einfach leer lassen.
 // ─────────────────────────────────────────────────────────────────────────────
 const ANSWER_MAPPINGS = [
-  // { qid: 0, from: "Alter Text", to: "Neuer Text" },
+   { qid: 5, from: "Ja, oft", to: "Ja, über fünf Mal" },
+   { qid: 5, from: "Ja, ein paar Mal", to: "Ja, ein - fünf Mal" },
+   { qid: 11, from: "Sehr stark", to: "Sehr stark(Ich kaufe nur das was ein Influencer mir empfiehlt)" },
+   { qid: 11, from: "Mittel", to: "Mittel(Ich nehme Ratschläge vom Influencer an, jedoch mache ich immer noch meine eigene Kaufentscheidung)" },
+  { qid: 12, from: "Ja, einmal oder ein paar Mal", to: "Ja, ein - fünf Mal" },
+  { qid: 12, from: "Ja, oft", to: "Ja, über fünf Mal" },
+  { qid: 18, from: "Nervig", to: "Störend" },
+  { qid: 18, from: "Eher nervig", to: "Eher störend" },
+  { qid: 18, from: "Nicht nervig", to: "Nicht störend" },
+  { qid: 21, from: "Sehr stark", to: "Sehr stark(Sie kaufen nur das was ein Influencer ihnen empfiehlt)" },
+  { qid: 21, from: "Mittel", to: "Mittel(Sie nehmem Ratschläge vom Influencer an, jedoch machen sie immer noch ihre eigene Kaufentscheidung)" },
+   
 ];
 
 // Wendet das Mapping auf eine einzelne Antwort an
