@@ -42,9 +42,10 @@ const QUESTIONS = [
 ];
 
 const ANSWER_MAPPINGS = [
-  { qid: 1,  from: "Mann",                  to: "männlich" },
-  { qid: 1,  from: "Frau",                  to: "weiblich" },
-  { qid: 5,  from: "Ja, oft",                  to: "Ja, über fünf Mal" },
+  { qid: 0,  from: "Mann",                     to: "männlich" },
+  { qid: 0,  from: "Frau",                     to: "weiblich" },
+  { qid: 3,  from: "Mehrmals täglich",          to: "Mehrmals täglich (über fünf Mal)" },
+  { qid: 5,  from: "Ja, oft",                   to: "Ja, über fünf Mal" },
   { qid: 5,  from: "Ja, ein paar Mal",          to: "Ja, ein - fünf Mal" },
   { qid: 11, from: "Sehr stark",                to: "Sehr stark(Ich kaufe nur das was ein Influencer mir empfiehlt)" },
   { qid: 11, from: "Mittel",                    to: "Mittel(Ich nehme Ratschläge vom Influencer an, jedoch mache ich immer noch meine eigene Kaufentscheidung)" },
@@ -55,7 +56,6 @@ const ANSWER_MAPPINGS = [
   { qid: 18, from: "Nicht nervig",              to: "Nicht störend" },
   { qid: 21, from: "Sehr stark",                to: "Sehr stark(Sie kaufen nur das was ein Influencer ihnen empfiehlt)" },
   { qid: 21, from: "Mittel",                    to: "Mittel(Sie nehmem Ratschläge vom Influencer an, jedoch machen sie immer noch ihre eigene Kaufentscheidung)" },
-  { qid: 3,  from: "Mehrmals täglich",          to: "Mehrmals täglich (über fünf Mal)" },
 ];
 
 const PALETTE = ["#a78bfa","#f472b6","#34d399","#60a5fa","#fb923c","#e879f9","#4ade80","#f59e0b","#38bdf8","#f87171",
