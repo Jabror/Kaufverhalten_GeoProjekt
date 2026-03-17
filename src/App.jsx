@@ -16,12 +16,12 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const QUESTIONS = [
-  { id: 0,  text: "Geschlecht", multi: false, options: ["Mann", "Frau"] },
+  { id: 0,  text: "Bist du weiblich oder männlich", multi: false, options: ["männlich", "weiblich"] },
   { id: 1,  text: "Wie alt bist du?", multi: false, options: ["13","14","15","16", "17", "18", "19", "Über 19"] },
   { id: 2,  text: "Auf welchen Plattformen folgst du Influencern?", multi: true,  options: ["Instagram","TikTok","YouTube","Snapchat","Ich folge keinen Influencern"] },
-  { id: 3,  text: "Wie oft siehst du Inhalte von Influencern auf Sozialen Medien?", multi: false, options: ["Mehrmals täglich","Einmal täglich","Mehrmals pro Woche","Selten","Nie"] },
+  { id: 3,  text: "Wie oft siehst du Inhalte von Influencern auf Sozialen Medien?", multi: false, options: ["Mehrmals täglich (über fünf Mal)","Einmal täglich","Mehrmals pro Woche","Selten","Nie"] },
   { id: 4,  text: "Wie sehr interessieren dich Produktempfehlungen von Influencern?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
-  { id: 5,  text: "Hast du schon einmal ein Produkt gekauft, weil ein Influencer es gezeigt hat?", multi: false, options: ["Ja, über fünf Mal","Ja, ein - fünf Mal","Einmal","Noch nie"] },
+  { id: 5,  text: "Hast du schon einmal ein Produkt gekauft, weil ein Influencer es empfohlen hat?", multi: false, options: ["Ja, über fünf Mal","Ja, ein - fünf Mal","Einmal","Noch nie"] },
   { id: 6,  text: "Welche Produkte kaufst du am ehesten wegen Influencern?", multi: true,  options: ["Kleidung","Kosmetik / Pflege","Technik","Essen / Getränke", "Self-improvement","Sonstiges","Keine"] },
   { id: 7,  text: "Wie sehr vertraust du Empfehlungen von Influencern?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
   { id: 8,  text: "Warum vertraust du der Empfehlung eines Influencers? (Mehrfachauswahl möglich)", multi: true, options: ["Ich finde die Person sympathisch/authentisch","Ich sehe das Produkt im täglichen Einsatz (Storys/Vlogs)","Die Ergebnisse/Vorher-Nachher-Effekte überzeugen mich","Weil viele andere aus meiner Freundesgruppe es auch kaufen","Ich vertraue Influencer-Empfehlungen generell nicht"] },
@@ -42,6 +42,8 @@ const QUESTIONS = [
 ];
 
 const ANSWER_MAPPINGS = [
+  { qid: 1,  from: "Mann",                  to: "männlich" },
+  { qid: 1,  from: "Frau",                  to: "weiblich" },
   { qid: 5,  from: "Ja, oft",                  to: "Ja, über fünf Mal" },
   { qid: 5,  from: "Ja, ein paar Mal",          to: "Ja, ein - fünf Mal" },
   { qid: 11, from: "Sehr stark",                to: "Sehr stark(Ich kaufe nur das was ein Influencer mir empfiehlt)" },
