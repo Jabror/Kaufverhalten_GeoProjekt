@@ -19,7 +19,7 @@ const QUESTIONS = [
   { id: 0,  text: "Geschlecht", multi: false, options: ["Mann", "Frau"] },
   { id: 1,  text: "Wie alt bist du?", multi: false, options: ["13","14","15","16", "17", "18", "19", "Über 19"] },
   { id: 2,  text: "Auf welchen Plattformen folgst du Influencern?", multi: true,  options: ["Instagram","TikTok","YouTube","Snapchat","Ich folge keinen Influencern"] },
-  { id: 3,  text: "Wie oft siehst du Inhalte von Influencern?", multi: false, options: ["Mehrmals täglich","Einmal täglich","Mehrmals pro Woche","Selten","Nie"] },
+  { id: 3,  text: "Wie oft siehst du Inhalte von Influencern auf Sozialen Medien?", multi: false, options: ["Mehrmals täglich","Einmal täglich","Mehrmals pro Woche","Selten","Nie"] },
   { id: 4,  text: "Wie sehr interessieren dich Produktempfehlungen von Influencern?", multi: false, options: ["Sehr stark","Stark","Mittel","Wenig","Gar nicht"] },
   { id: 5,  text: "Hast du schon einmal ein Produkt gekauft, weil ein Influencer es gezeigt hat?", multi: false, options: ["Ja, über fünf Mal","Ja, ein - fünf Mal","Einmal","Noch nie"] },
   { id: 6,  text: "Welche Produkte kaufst du am ehesten wegen Influencern?", multi: true,  options: ["Kleidung","Kosmetik / Pflege","Technik","Essen / Getränke", "Self-improvement","Sonstiges","Keine"] },
@@ -53,6 +53,7 @@ const ANSWER_MAPPINGS = [
   { qid: 18, from: "Nicht nervig",              to: "Nicht störend" },
   { qid: 21, from: "Sehr stark",                to: "Sehr stark(Sie kaufen nur das was ein Influencer ihnen empfiehlt)" },
   { qid: 21, from: "Mittel",                    to: "Mittel(Sie nehmem Ratschläge vom Influencer an, jedoch machen sie immer noch ihre eigene Kaufentscheidung)" },
+  { qid: 3,  from: "Mehrmals täglich",          to: "Mehrmals täglich (über fünf Mal)" },
 ];
 
 const PALETTE = ["#a78bfa","#f472b6","#34d399","#60a5fa","#fb923c","#e879f9","#4ade80","#f59e0b","#38bdf8","#f87171",
