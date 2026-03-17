@@ -44,7 +44,7 @@ const QUESTIONS = [
 const ANSWER_MAPPINGS = [
   { qid: 0,  from: "Mann",                     to: "männlich" },
   { qid: 0,  from: "Frau",                     to: "weiblich" },
-  { qid: 3,  from: "Mehrmals täglich",          to: "Mehrmals täglich (über fünf Mal)" },
+  { qid: 3,  from: "Mehrmals täglich",          to: "Mehrmals täglich(Über fünf Mal)" },
   { qid: 5,  from: "Ja, oft",                   to: "Ja, über fünf Mal" },
   { qid: 5,  from: "Ja, ein paar Mal",          to: "Ja, ein - fünf Mal" },
   { qid: 11, from: "Sehr stark",                to: "Sehr stark(Ich kaufe nur das was ein Influencer mir empfiehlt)" },
@@ -54,6 +54,7 @@ const ANSWER_MAPPINGS = [
   { qid: 18, from: "Nervig",                    to: "Störend" },
   { qid: 18, from: "Eher nervig",               to: "Eher störend" },
   { qid: 18, from: "Nicht nervig",              to: "Nicht störend" },
+  { qid: 20, from: "Ab und zu",              to: "Ab und zu(Jedes vierte Mal)" },
   { qid: 21, from: "Sehr stark",                to: "Sehr stark(Sie kaufen nur das was ein Influencer ihnen empfiehlt)" },
   { qid: 21, from: "Mittel",                    to: "Mittel(Sie nehmem Ratschläge vom Influencer an, jedoch machen sie immer noch ihre eigene Kaufentscheidung)" },
 ];
