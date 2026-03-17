@@ -36,33 +36,33 @@ const QUESTIONS = [
   { id: 17, text: "Wie glaubwürdig findest du Influencer im Vergleich zu normaler Werbung?", multi: false, options: ["Viel glaubwürdiger","Etwas glaubwürdiger","Gleich glaubwürdig","Weniger glaubwürdig","Viel weniger glaubwürdig"] },
   { id: 18, text: "Findest du es störend, wenn influencer für Produkte Werbung machen?", multi: false, options: ["Störend","Eher störend","Neutral","Nicht störend"] },
   { id: 19, text: "Würdest du ein Produkt eher kaufen, wenn dein Lieblings-Influencer es nutzt?", multi: false, options: ["Ja, sicher","Wahrscheinlich","Vielleicht","Eher nicht","Nein"] },
-  { id: 20, text: "Nutzt du Funktionen wie „Buy Now, Pay Later“ (z. B. Klarna), um Produkte von Influencer-Brands oder Kooperationen zu bezahlen?", multi: false, options: ["Regelmässig","Ab und zu","Nur bei teuren Anschaffungen","Nein, ich bezahle immer direkt"] },
+  { id: 20, text: "Nutzt du Funktionen wie „Buy Now, Pay Later" (z. B. Klarna), um Produkte von Influencer-Brands oder Kooperationen zu bezahlen?", multi: false, options: ["Regelmässig","Ab und zu(Jedes vierte Mal)","Nur bei teuren Anschaffungen","Nein, ich bezahle immer direkt"] },
   { id: 21, text: "Denkst du, Influencer beeinflussen das Kaufverhalten von Jugendlichen stark?", multi: false, options: ["Sehr stark(Sie kaufen nur das was ein Influencer ihnen empfiehlt)","Stark","Mittel(Sie nehmem Ratschläge vom Influencer an, jedoch machen sie immer noch ihre eigene Kaufentscheidung)","Wenig","Gar nicht"] },
   { id: 22, text: "Findest du Influencer-Werbung insgesamt positiv oder negativ?", multi: false, options: ["Sehr positiv","Eher positiv","Neutral","Eher negativ","Sehr negativ"] },
 ];
 
+// ── WICHTIG: "to" muss EXAKT mit dem Text in "options" oben übereinstimmen ──
 const ANSWER_MAPPINGS = [
-  { qid: 0,  from: "Mann",                     to: "männlich" },
-  { qid: 0,  from: "Frau",                     to: "weiblich" },
-  { qid: 3,  from: "Mehrmals täglich",          to: "Mehrmals täglich(Über fünf Mal)" },
-  { qid: 5,  from: "Ja, oft",                   to: "Ja, über fünf Mal" },
-  { qid: 5,  from: "Ja, ein paar Mal",          to: "Ja, ein - fünf Mal" },
-  { qid: 11, from: "Sehr stark",                to: "Sehr stark(Ich kaufe nur das was ein Influencer mir empfiehlt)" },
-  { qid: 11, from: "Mittel",                    to: "Mittel(Ich nehme Ratschläge vom Influencer an, jedoch mache ich immer noch meine eigene Kaufentscheidung)" },
+  { qid: 0,  from: "Mann",                        to: "männlich" },
+  { qid: 0,  from: "Frau",                        to: "weiblich" },
+  { qid: 3,  from: "Mehrmals täglich",             to: "Mehrmals täglich (über fünf Mal)" },
+  { qid: 5,  from: "Ja, oft",                      to: "Ja, über fünf Mal" },
+  { qid: 5,  from: "Ja, ein paar Mal",             to: "Ja, ein - fünf Mal" },
+  { qid: 11, from: "Sehr stark",                   to: "Sehr stark(Ich kaufe nur das was ein Influencer mir empfiehlt)" },
+  { qid: 11, from: "Mittel",                       to: "Mittel(Ich nehme Ratschläge vom Influencer an, jedoch mache ich immer noch meine eigene Kaufentscheidung)" },
   { qid: 12, from: "Ja, einmal oder ein paar Mal", to: "Ja, ein - fünf Mal" },
-  { qid: 12, from: "Ja, oft",                   to: "Ja, über fünf Mal" },
-  { qid: 18, from: "Nervig",                    to: "Störend" },
-  { qid: 18, from: "Eher nervig",               to: "Eher störend" },
-  { qid: 18, from: "Nicht nervig",              to: "Nicht störend" },
-  { qid: 20, from: "Ab und zu",              to: "Ab und zu(Jedes vierte Mal)" },
-  { qid: 21, from: "Sehr stark",                to: "Sehr stark(Sie kaufen nur das was ein Influencer ihnen empfiehlt)" },
-  { qid: 21, from: "Mittel",                    to: "Mittel(Sie nehmem Ratschläge vom Influencer an, jedoch machen sie immer noch ihre eigene Kaufentscheidung)" },
+  { qid: 12, from: "Ja, oft",                      to: "Ja, über fünf Mal" },
+  { qid: 18, from: "Nervig",                       to: "Störend" },
+  { qid: 18, from: "Eher nervig",                  to: "Eher störend" },
+  { qid: 18, from: "Nicht nervig",                 to: "Nicht störend" },
+  { qid: 20, from: "Ab und zu",                    to: "Ab und zu(Jedes vierte Mal)" },
+  { qid: 21, from: "Sehr stark",                   to: "Sehr stark(Sie kaufen nur das was ein Influencer ihnen empfiehlt)" },
+  { qid: 21, from: "Mittel",                       to: "Mittel(Sie nehmem Ratschläge vom Influencer an, jedoch machen sie immer noch ihre eigene Kaufentscheidung)" },
 ];
 
 const PALETTE = ["#a78bfa","#f472b6","#34d399","#60a5fa","#fb923c","#e879f9","#4ade80","#f59e0b","#38bdf8","#f87171",
                  "#c084fc","#86efac","#fdba74","#67e8f9","#fca5a5","#a5f3fc","#d4d4d8","#fde68a","#bbf7d0","#e0f2fe"];
 
-// Wendet das Mapping auf eine einzelne Antwort an
 function applyMapping(qid, answer) {
   for (const m of ANSWER_MAPPINGS) {
     if (m.qid === qid && m.from === answer) return m.to;
@@ -70,7 +70,6 @@ function applyMapping(qid, answer) {
   return answer;
 }
 
-// Normalisiert alle Antworten einer Response durch das Mapping
 function normalizeResponse(r) {
   const normalized = { ...r, answers: { ...r.answers } };
   QUESTIONS.forEach(q => {
@@ -104,7 +103,6 @@ function matchesFilter(response, filterQid, filterOption) {
 }
 
 async function exportXLSX(responses) {
-  // Dynamically load SheetJS
   await new Promise((resolve, reject) => {
     if (window.XLSX) { resolve(); return; }
     const s = document.createElement("script");
@@ -113,10 +111,7 @@ async function exportXLSX(responses) {
     document.head.appendChild(s);
   });
   const XLS = window.XLSX;
-
   const wb = XLS.utils.book_new();
-
-  // ── Sheet 1: Rohdaten ────────────────────────────────────────────────────
   const headers = ["#", "Zeitstempel", ...QUESTIONS.map(q => q.text)];
   const rows = responses.map((r, i) => {
     const ts = r.ts?.toDate ? r.ts.toDate().toLocaleString("de-DE") : "–";
@@ -127,47 +122,23 @@ async function exportXLSX(responses) {
     });
     return [i + 1, ts, ...cols];
   });
-
-  const wsData = [headers, ...rows];
-  const ws = XLS.utils.aoa_to_sheet(wsData);
-
-  // Column widths
-  ws["!cols"] = [
-    { wch: 5 },   // #
-    { wch: 18 },  // Zeitstempel
-    ...QUESTIONS.map(() => ({ wch: 28 }))
-  ];
-
-  // Freeze header row
+  const ws = XLS.utils.aoa_to_sheet([headers, ...rows]);
+  ws["!cols"] = [{ wch: 5 }, { wch: 18 }, ...QUESTIONS.map(() => ({ wch: 28 }))];
   ws["!freeze"] = { xSplit: 0, ySplit: 1 };
-
   XLS.utils.book_append_sheet(wb, ws, "Rohdaten");
-
-  // ── Sheet 2: Zusammenfassung ─────────────────────────────────────────────
   const summaryRows = [["Frage", "Antwort", "Anzahl", "Prozent"]];
   const total = responses.length;
   QUESTIONS.forEach(q => {
-    const counts = {};
-    q.options.forEach(o => counts[o] = 0);
-    responses.forEach(r => {
-      const ans = r.answers?.[q.id];
-      if (!ans) return;
-      (Array.isArray(ans) ? ans : [ans]).forEach(a => { if (counts[a] !== undefined) counts[a]++; });
-    });
+    const counts = tally(responses, q.id, q.options);
     summaryRows.push([q.text, "", "", ""]);
     q.options.forEach(opt => {
-      const n = counts[opt];
-      const pct = total > 0 ? Math.round((n / total) * 100) + "%" : "0%";
-      summaryRows.push(["", opt, n, pct]);
+      summaryRows.push(["", opt, counts[opt], total > 0 ? Math.round((counts[opt]/total)*100)+"%" : "0%"]);
     });
     summaryRows.push(["", "", "", ""]);
   });
-
   const ws2 = XLS.utils.aoa_to_sheet(summaryRows);
   ws2["!cols"] = [{ wch: 55 }, { wch: 35 }, { wch: 10 }, { wch: 10 }];
   XLS.utils.book_append_sheet(wb, ws2, "Zusammenfassung");
-
-  // Download
   XLS.writeFile(wb, "umfrage_ergebnisse.xlsx");
 }
 
@@ -204,19 +175,23 @@ function Bar({ label, value, max, color }) {
 }
 
 const STORAGE_KEY = "umfrage_geoprojekt_done";
+const CORRECT_PIN = "1111";
 
 export default function App() {
-  const [view, setView]               = useState("home");
-  const [step, setStep]               = useState(0);
-  const [answers, setAnswers]         = useState({});
-  const [responses, setResponses]     = useState([]);
-  const [loading, setLoading]         = useState(false);
-  const [submitted, setSubmitted]     = useState(false);
-  const [dbLoading, setDbLoading]     = useState(false);
-  const [dbError, setDbError]         = useState("");
-  const [filterQid, setFilterQid]     = useState(null);
+  const [view, setView]                 = useState("home");
+  const [step, setStep]                 = useState(0);
+  const [answers, setAnswers]           = useState({});
+  const [responses, setResponses]       = useState([]);
+  const [loading, setLoading]           = useState(false);
+  const [submitted, setSubmitted]       = useState(false);
+  const [dbLoading, setDbLoading]       = useState(false);
+  const [dbError, setDbError]           = useState("");
+  const [filterQid, setFilterQid]       = useState(null);
   const [filterOption, setFilterOption] = useState(null);
-  const [alreadyDone, setAlreadyDone] = useState(() => !!localStorage.getItem(STORAGE_KEY));
+  const [alreadyDone, setAlreadyDone]   = useState(() => !!localStorage.getItem(STORAGE_KEY));
+  const [pinUnlocked, setPinUnlocked]   = useState(false);
+  const [pinInput, setPinInput]         = useState("");
+  const [pinError, setPinError]         = useState(false);
 
   useEffect(() => {
     if (view === "results") {
@@ -262,6 +237,18 @@ export default function App() {
   function resetSurvey() { setStep(0); setAnswers({}); setSubmitted(false); setView("home"); }
   function clearFilter() { setFilterQid(null); setFilterOption(null); }
 
+  function handlePinSubmit() {
+    if (pinInput === CORRECT_PIN) {
+      setPinUnlocked(true); setPinError(false); setView("results");
+    } else {
+      setPinError(true); setPinInput("");
+    }
+  }
+
+  function goToResults() {
+    if (pinUnlocked) setView("results"); else setView("pin");
+  }
+
   const bg   = { minHeight:"100vh", background:"#0b0b14", fontFamily:"'DM Sans', sans-serif", color:"#f0f0f8" };
   const card = { background:"#13131f", border:"1px solid #2a2a3e", borderRadius:20, padding:"32px 36px", maxWidth:680, margin:"0 auto" };
   const btn  = (active, color="#a78bfa") => ({
@@ -280,7 +267,7 @@ export default function App() {
           Influencer & Kaufverhalten
         </h1>
         <p style={{ color:"#9090b0", fontSize:15, lineHeight:1.7, margin:"0 0 28px" }}>
-          20 Fragen · anonym · ca. 3 Minuten<br/>
+          22 Fragen · anonym · ca. 3 Minuten<br/>
           Deine Antworten helfen uns zu verstehen, wie Influencer das Kaufverhalten von Jugendlichen beeinflussen.
         </p>
         {alreadyDone ? (
@@ -293,7 +280,7 @@ export default function App() {
           <button style={{ ...btn(true), marginBottom:12 }} onClick={() => setView("survey")}>Umfrage starten →</button>
         )}
         <br/>
-        <button style={{ ...btn(false,"#34d399"), marginTop: alreadyDone ? 0 : 8 }} onClick={() => setView("results")}>Ergebnisse ansehen</button>
+        <button style={{ ...btn(false,"#34d399"), marginTop: alreadyDone ? 0 : 8 }} onClick={goToResults}>Ergebnisse ansehen</button>
       </div>
     </div>
   );
@@ -306,9 +293,7 @@ export default function App() {
         <div style={{ fontSize:64, marginBottom:12 }}>🎉</div>
         <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:28, fontWeight:800, margin:"0 0 10px", color:"#a78bfa" }}>Danke für deine Teilnahme!</h2>
         <p style={{ color:"#9090b0", fontSize:14, marginBottom:28 }}>Deine Antworten wurden in Firebase gespeichert.</p>
-        <div style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
-          <button style={btn(true)} onClick={() => setView("results")}>Ergebnisse ansehen</button>
-        </div>
+        <button style={btn(true)} onClick={goToResults}>Ergebnisse ansehen</button>
       </div>
     </div>
   );
@@ -361,20 +346,52 @@ export default function App() {
     );
   }
 
+  // ── PIN ───────────────────────────────────────────────────────────────────
+  if (view === "pin") return (
+    <div style={{ ...bg, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
+      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+      <div style={{ ...card, textAlign:"center", maxWidth:400 }}>
+        <div style={{ fontSize:48, marginBottom:12 }}>🔒</div>
+        <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:24, fontWeight:800, margin:"0 0 8px", color:"#f0f0f8" }}>Geschützter Bereich</h2>
+        <p style={{ color:"#9090b0", fontSize:14, marginBottom:28 }}>Bitte gib den PIN ein, um die Ergebnisse zu sehen.</p>
+        <div style={{ display:"flex", justifyContent:"center", gap:14, marginBottom:24 }}>
+          {[0,1,2,3].map(i => (
+            <div key={i} style={{ width:18, height:18, borderRadius:"50%", background: pinInput.length > i ? "#a78bfa" : "transparent", border:"2px solid " + (pinInput.length > i ? "#a78bfa" : "#2a2a3e"), transition:"all 0.15s" }}/>
+          ))}
+        </div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:12, maxWidth:240, margin:"0 auto 16px" }}>
+          {[1,2,3,4,5,6,7,8,9].map(n => (
+            <button key={n} onClick={() => { if (pinInput.length < 4) setPinInput(p => p + n); setPinError(false); }}
+              style={{ background:"#1a1a2e", border:"1px solid #2a2a3e", borderRadius:12, padding:"16px", fontSize:20, fontWeight:700, color:"#f0f0f8", cursor:"pointer", fontFamily:"inherit" }}>
+              {n}
+            </button>
+          ))}
+          <div/>
+          <button onClick={() => { if (pinInput.length < 4) setPinInput(p => p + "0"); setPinError(false); }}
+            style={{ background:"#1a1a2e", border:"1px solid #2a2a3e", borderRadius:12, padding:"16px", fontSize:20, fontWeight:700, color:"#f0f0f8", cursor:"pointer", fontFamily:"inherit" }}>0</button>
+          <button onClick={() => setPinInput(p => p.slice(0,-1))}
+            style={{ background:"#1a1a2e", border:"1px solid #2a2a3e", borderRadius:12, padding:"16px", fontSize:18, color:"#9090b0", cursor:"pointer", fontFamily:"inherit" }}>⌫</button>
+        </div>
+        {pinError && <p style={{ color:"#f87171", fontSize:13, marginBottom:12 }}>❌ Falscher PIN. Bitte versuche es erneut.</p>}
+        <button style={{ ...btn(pinInput.length === 4, "#a78bfa"), width:"100%", marginBottom:12 }} disabled={pinInput.length !== 4} onClick={handlePinSubmit}>Bestätigen →</button>
+        <br/>
+        <button onClick={() => setView("home")} style={{ background:"none", border:"none", color:"#555", cursor:"pointer", fontSize:13, fontFamily:"inherit" }}>← Zurück</button>
+      </div>
+    </div>
+  );
+
   // ── RESULTS ───────────────────────────────────────────────────────────────
   if (view === "results") {
-    const filtered = responses.filter(r => matchesFilter(r, filterQid, filterOption));
-    const total    = responses.length;
-    const shown    = filtered.length;
+    const filtered   = responses.filter(r => matchesFilter(r, filterQid, filterOption));
+    const total      = responses.length;
+    const shown      = filtered.length;
     const isFiltered = filterQid !== null && filterOption !== null;
-    const filterQ  = isFiltered ? QUESTIONS.find(q => q.id === filterQid) : null;
+    const filterQ    = isFiltered ? QUESTIONS.find(q => q.id === filterQid) : null;
 
     return (
       <div style={{ ...bg, padding:"24px 16px" }}>
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
         <div style={{ maxWidth:760, margin:"0 auto" }}>
-
-          {/* Header */}
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:20, flexWrap:"wrap", gap:12 }}>
             <div>
               <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:28, fontWeight:800, margin:0, background:"linear-gradient(135deg,#a78bfa,#34d399)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>Ergebnisse</h1>
@@ -395,75 +412,39 @@ export default function App() {
             </div>
           </div>
 
-          {/* ── FILTER BOX ── */}
           <div style={{ background:"#13131f", border:`1px solid ${isFiltered?"#f472b6":"#2a2a3e"}`, borderRadius:16, padding:"20px 24px", marginBottom:24 }}>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:14, flexWrap:"wrap", gap:8 }}>
               <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                 <span style={{ fontSize:16 }}>🔍</span>
                 <span style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, color:"#e0e0f0" }}>Filter</span>
-                {isFiltered && (
-                  <span style={{ background:"#f472b622", color:"#f472b6", padding:"2px 10px", borderRadius:20, fontSize:11, fontWeight:700 }}>
-                    Aktiv: {filterQ?.text.slice(0,30)}… → „{filterOption}"
-                  </span>
-                )}
+                {isFiltered && <span style={{ background:"#f472b622", color:"#f472b6", padding:"2px 10px", borderRadius:20, fontSize:11, fontWeight:700 }}>Aktiv: {filterQ?.text.slice(0,30)}… → „{filterOption}"</span>}
               </div>
-              {isFiltered && (
-                <button onClick={clearFilter} style={{ background:"none", border:"1px solid #f472b6", color:"#f472b6", borderRadius:8, padding:"4px 12px", fontSize:12, cursor:"pointer", fontFamily:"inherit" }}>
-                  ✕ Filter entfernen
-                </button>
-              )}
+              {isFiltered && <button onClick={clearFilter} style={{ background:"none", border:"1px solid #f472b6", color:"#f472b6", borderRadius:8, padding:"4px 12px", fontSize:12, cursor:"pointer", fontFamily:"inherit" }}>✕ Filter entfernen</button>}
             </div>
-
             <div style={{ display:"flex", gap:12, flexWrap:"wrap", alignItems:"flex-end" }}>
-              {/* Frage auswählen */}
               <div style={{ flex:1, minWidth:200 }}>
                 <label style={{ fontSize:11, color:"#888", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>Frage</label>
-                <select
-                  value={filterQid ?? ""}
-                  onChange={e => { setFilterQid(e.target.value === "" ? null : Number(e.target.value)); setFilterOption(null); }}
-                  style={{ width:"100%", background:"#0b0b14", border:"1px solid #2a2a3e", borderRadius:10, padding:"10px 14px", color:"#f0f0f8", fontFamily:"inherit", fontSize:13, cursor:"pointer" }}
-                >
+                <select value={filterQid ?? ""} onChange={e => { setFilterQid(e.target.value === "" ? null : Number(e.target.value)); setFilterOption(null); }}
+                  style={{ width:"100%", background:"#0b0b14", border:"1px solid #2a2a3e", borderRadius:10, padding:"10px 14px", color:"#f0f0f8", fontFamily:"inherit", fontSize:13, cursor:"pointer" }}>
                   <option value="">– Frage wählen –</option>
-                  {QUESTIONS.map(q => (
-                    <option key={q.id} value={q.id}>{q.id === 0 ? "Geschlecht" : `Frage ${q.id}`}: {q.text.slice(0,45)}{q.text.length>45?"…":""}</option>
-                  ))}
+                  {QUESTIONS.map(q => <option key={q.id} value={q.id}>{q.id === 0 ? "Geschlecht" : `Frage ${q.id}`}: {q.text.slice(0,45)}{q.text.length>45?"…":""}</option>)}
                 </select>
               </div>
-
-              {/* Antwort auswählen */}
               <div style={{ flex:1, minWidth:160 }}>
                 <label style={{ fontSize:11, color:"#888", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>Antwort</label>
-                <select
-                  value={filterOption ?? ""}
-                  onChange={e => setFilterOption(e.target.value === "" ? null : e.target.value)}
+                <select value={filterOption ?? ""} onChange={e => setFilterOption(e.target.value === "" ? null : e.target.value)}
                   disabled={filterQid === null}
-                  style={{ width:"100%", background:"#0b0b14", border:"1px solid #2a2a3e", borderRadius:10, padding:"10px 14px", color: filterQid===null?"#555":"#f0f0f8", fontFamily:"inherit", fontSize:13, cursor: filterQid===null?"not-allowed":"pointer" }}
-                >
+                  style={{ width:"100%", background:"#0b0b14", border:"1px solid #2a2a3e", borderRadius:10, padding:"10px 14px", color: filterQid===null?"#555":"#f0f0f8", fontFamily:"inherit", fontSize:13, cursor: filterQid===null?"not-allowed":"pointer" }}>
                   <option value="">– Antwort wählen –</option>
-                  {filterQid !== null && QUESTIONS.find(q => q.id === filterQid)?.options.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
+                  {filterQid !== null && QUESTIONS.find(q => q.id === filterQid)?.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                 </select>
               </div>
             </div>
-
-            {/* Erklärungstext */}
-            {!isFiltered && (
-              <p style={{ color:"#555", fontSize:12, margin:"12px 0 0" }}>
-                Wähle eine Frage und eine Antwort, um nur die Fragebögen dieser Gruppe anzuzeigen. Z.B. nur 15-Jährige, nur Mädchen, etc.
-              </p>
-            )}
-            {isFiltered && shown === 0 && (
-              <p style={{ color:"#f87171", fontSize:12, margin:"12px 0 0" }}>⚠️ Keine Antworten entsprechen diesem Filter.</p>
-            )}
-            {isFiltered && shown > 0 && (
-              <p style={{ color:"#34d399", fontSize:12, margin:"12px 0 0" }}>
-                ✓ {shown} Teilnehmer haben bei „{filterQ?.text}" mit „{filterOption}" geantwortet.
-              </p>
-            )}
+            {!isFiltered && <p style={{ color:"#555", fontSize:12, margin:"12px 0 0" }}>Wähle eine Frage und eine Antwort, um nur die Fragebögen dieser Gruppe anzuzeigen.</p>}
+            {isFiltered && shown === 0 && <p style={{ color:"#f87171", fontSize:12, margin:"12px 0 0" }}>⚠️ Keine Antworten entsprechen diesem Filter.</p>}
+            {isFiltered && shown > 0 && <p style={{ color:"#34d399", fontSize:12, margin:"12px 0 0" }}>✓ {shown} Teilnehmer haben bei „{filterQ?.text}" mit „{filterOption}" geantwortet.</p>}
           </div>
 
-          {/* Errors / loading */}
           {dbLoading && <p style={{ color:"#666", textAlign:"center", padding:40 }}>Lade Daten aus Firebase…</p>}
           {dbError   && <p style={{ color:"#f87171", textAlign:"center" }}>{dbError}</p>}
           {!dbLoading && !dbError && total === 0 && (
@@ -473,22 +454,16 @@ export default function App() {
             </div>
           )}
 
-          {/* Charts */}
           {!dbLoading && shown > 0 && QUESTIONS.map((q, qi) => {
-            // Skip the filter question itself to avoid confusion
-            const counts = tally(filtered, q.id, q.options);
-            const color  = PALETTE[qi % PALETTE.length];
+            const counts    = tally(filtered, q.id, q.options);
+            const color     = PALETTE[qi % PALETTE.length];
             const isFilterQ = isFiltered && q.id === filterQid;
             return (
               <div key={q.id} style={{ ...card, marginBottom:16, border:`1px solid ${isFilterQ?"#f472b644":"#2a2a3e"}` }}>
                 <div style={{ display:"flex", alignItems:"flex-start", gap:12, marginBottom:16 }}>
-                  <span style={{ background:color+"22", color, padding:"2px 10px", borderRadius:20, fontSize:12, fontWeight:700, flexShrink:0 }}>
-                    {q.id === 0 ? "G" : `#${q.id}`}
-                  </span>
+                  <span style={{ background:color+"22", color, padding:"2px 10px", borderRadius:20, fontSize:12, fontWeight:700, flexShrink:0 }}>{q.id === 0 ? "G" : `#${q.id}`}</span>
                   <p style={{ margin:0, fontSize:14, fontWeight:600, color:"#e0e0f0", lineHeight:1.5, flex:1 }}>{q.text}</p>
-                  {isFilterQ && (
-                    <span style={{ background:"#f472b622", color:"#f472b6", padding:"2px 8px", borderRadius:10, fontSize:10, fontWeight:700, flexShrink:0 }}>FILTER</span>
-                  )}
+                  {isFilterQ && <span style={{ background:"#f472b622", color:"#f472b6", padding:"2px 8px", borderRadius:10, fontSize:10, fontWeight:700, flexShrink:0 }}>FILTER</span>}
                 </div>
                 {q.options.map(opt => <Bar key={opt} label={opt} value={counts[opt]} max={shown} color={color} />)}
               </div>
