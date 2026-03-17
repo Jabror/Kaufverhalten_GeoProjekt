@@ -36,7 +36,7 @@ const QUESTIONS = [
   { id: 17, text: "Wie glaubwürdig findest du Influencer im Vergleich zu normaler Werbung?", multi: false, options: ["Viel glaubwürdiger","Etwas glaubwürdiger","Gleich glaubwürdig","Weniger glaubwürdig","Viel weniger glaubwürdig"] },
   { id: 18, text: "Findest du es störend, wenn influencer für Produkte Werbung machen?", multi: false, options: ["Störend","Eher störend","Neutral","Nicht störend"] },
   { id: 19, text: "Würdest du ein Produkt eher kaufen, wenn dein Lieblings-Influencer es nutzt?", multi: false, options: ["Ja, sicher","Wahrscheinlich","Vielleicht","Eher nicht","Nein"] },
-  { id: 20, text: "Nutzt du Funktionen wie „Buy Now, Pay Later" (z. B. Klarna), um Produkte von Influencer-Brands oder Kooperationen zu bezahlen?", multi: false, options: ["Regelmässig","Ab und zu(Jedes vierte Mal)","Nur bei teuren Anschaffungen","Nein, ich bezahle immer direkt"] },
+  { id: 20, text: "Nutzt du Funktionen wie „Buy Now, Pay Later'' (z. B. Klarna), um Produkte von Influencer-Brands oder Kooperationen zu bezahlen?", multi: false, options: ["Regelmässig","Ab und zu(Jedes vierte Mal)","Nur bei teuren Anschaffungen","Nein, ich bezahle immer direkt"] },
   { id: 21, text: "Denkst du, Influencer beeinflussen das Kaufverhalten von Jugendlichen stark?", multi: false, options: ["Sehr stark(Sie kaufen nur das was ein Influencer ihnen empfiehlt)","Stark","Mittel(Sie nehmem Ratschläge vom Influencer an, jedoch machen sie immer noch ihre eigene Kaufentscheidung)","Wenig","Gar nicht"] },
   { id: 22, text: "Findest du Influencer-Werbung insgesamt positiv oder negativ?", multi: false, options: ["Sehr positiv","Eher positiv","Neutral","Eher negativ","Sehr negativ"] },
 ];
