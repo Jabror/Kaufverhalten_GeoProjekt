@@ -48,6 +48,7 @@ const ANSWER_MAPPINGS = [
   { qid: 3,  from: "Mehrmals täglich",             to: "Mehrmals täglich (über fünf Mal)" },
   { qid: 5,  from: "Ja, oft",                      to: "Ja, über fünf Mal" },
   { qid: 5,  from: "Ja, ein paar Mal",             to: "Ja, ein - fünf Mal" },
+  { qid: 9,  from: "Manchmal",             to: "Manchmal(Jedes viertemal sind sie nicht erhlich)" },
   { qid: 11, from: "Sehr stark",                   to: "Sehr stark(Ich kaufe nur das was ein Influencer mir empfiehlt)" },
   { qid: 11, from: "Mittel",                       to: "Mittel(Ich nehme Ratschläge vom Influencer an, jedoch mache ich immer noch meine eigene Kaufentscheidung)" },
   { qid: 12, from: "Ja, einmal oder ein paar Mal", to: "Ja, ein - fünf Mal" },
